@@ -3,6 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
 
 	_ "github.com/lib/pq"
 )
@@ -19,7 +23,12 @@ type PostgresStore struct {
 }
 
 func NewPostgresStore() (*PostgresStore, error) {
-	connStr := "postgresql://neondb_owner:agG3peCTXV0m@ep-solitary-sound-a16dx7sw.ap-southeast-1.aws.neon.tech/go-bank?sslmode=require"
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	connStr := os.Getenv("DB_URL")
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
